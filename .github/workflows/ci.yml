@@ -1,0 +1,46 @@
+
+name: GitOps Helm CI
+
+
+on:
+  push: 
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  helm-validation:
+    name: Helm Validation
+    runs-on: ubuntu-latest.  #Specifies the GitHub-hosted runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with: 
+          version: v4.3.0
+
+      - name: Helm lint
+        run: |
+          helm lint helm/custom-nginx-chart
+      # Generates Kubernetes manifests without deploying
+      - name: Vaidate Environment Manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for env in dev qa uat prod; do
+            echo "======== Validatitng $env ====="
+
+            helm template nginx helm/custtom-nginx-chart \
+             -f gitops/$env/values.yml \
+             > /tmp/${env}-rendered.yaml
+
+            grep -E 'replicas: | image:' \
+             /tmp/${env}-rendered.yaml
+          done

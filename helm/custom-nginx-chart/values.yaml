@@ -1,0 +1,13 @@
+
+replicaCount: 5
+
+image:
+  repository: nginx
+  tag: "1.27"
+  digest: ""
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
