@@ -15,7 +15,7 @@ permissions:
 jobs:
   helm-validation:
     name: Helm Validation
-    runs-on: ubuntu-latest.  #Specifies the GitHub-hosted runner
+    runs-on: ubuntu-latest  #Specifies the GitHub-hosted runner
 
     steps:
       - name: Checkout Repository
@@ -38,10 +38,10 @@ jobs:
           for env in dev qa uat prod; do
             echo "======== Validatitng $env ====="
 
-            helm template nginx helm/custtom-nginx-chart \
+            helm template nginx helm/custom-nginx-chart \
              -f gitops/$env/values.yml \
              > /tmp/${env}-rendered.yaml
 
-            grep -E 'replicas: | image:' \
+            grep -E 'replicas:|image:' \
              /tmp/${env}-rendered.yaml
           done
