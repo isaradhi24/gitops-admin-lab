@@ -1,0 +1,9 @@
+{
+  "name": "github-gitops-admin-infrastructure",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:isaradhi24@18495041/gitops-admin-lab@1411077218:environment:infrastructure",
+  "description": "GitHub Actions OIDC for GitOps Admin Terraform lab",
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ]
+}
