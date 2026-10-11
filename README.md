@@ -305,3 +305,10 @@ Next milestone: Implement and validate the first GitHub Actions CI workflow.
 ---
 
 *This repository is a hands-on GitOps Administrator interview preparation lab. Azure cloud integrations and production controls are implemented progressively and are not assumed to be operational until verified.*
+
+Our objective is to automate the entire lab lifecycle:
+
+- Initial setup: Configure Azure OIDC identity, federated credentials, and RBAC.
+- Start of session: Create temporary Terraform backend storage.
+- During session: Use GitHub Actions to provision Azure infrastructure with Terraform.
+- End of session: Destroy Terraform-managed resources, delete backend storage, and verify cleanup.
