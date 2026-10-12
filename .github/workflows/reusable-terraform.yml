@@ -33,8 +33,8 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       ARM_USE_OIDC: "true"
 
-    # Reuse our existing, tested OIDC environment for now.
-    environment: infrastructure
+    # Select the environment-specific Azure OIDC configuration.
+    environment: infrastructure-${{ inputs.environment }}
 
     defaults:
       run:
