@@ -9,7 +9,7 @@ on:
         type: string
 
       terraform_action:
-        description: "Terraform action: validate"
+        description: "Terraform action: plan or apply"
         required: true
         type: string
 
@@ -73,3 +73,7 @@ jobs:
       - name: Terraform Plan
         if: ${{ inputs.terraform_action == 'plan' }}
         run: terraform plan -input=false -no-color
+
+      - name: Terraform Apply
+        if: ${{ inputs.terraform_action == 'apply' }}
+        run: terraform apply -input=false -auto-approve -no-color
