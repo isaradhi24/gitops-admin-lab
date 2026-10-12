@@ -24,7 +24,7 @@ jobs:
     env:
       TF_VAR_resource_group_name: rg-gitops-admin-${{ inputs.environment }}
       TF_VAR_location: eastus
-      TF_VAR_acr_name: gitopsadminacr12345
+      TF_VAR_acr_name: gitopsadminacr12345${{ inputs.environment }}
       TF_VAR_environment: ${{ inputs.environment }}
 
       # Azure OIDC authentication for Terraform
