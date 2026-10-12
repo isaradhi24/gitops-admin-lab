@@ -1,0 +1,50 @@
+name: Reusable Terraform Workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Terraform environment: dev, qa, uat, prod"
+        required: true
+        type: string
+
+      terraform_action:
+        description: "Terraform action: validate"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform:
+    name: Terraform ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_resource_group_name: rg-gitops-admin-${{ inputs.environment }}
+      TF_VAR_location: eastus
+      TF_VAR_acr_name: gitopsadminacr12345
+      TF_VAR_environment: ${{ inputs.environment }}
+
+    # Reuse our existing, tested OIDC environment for now.
+    environment: infrastructure
+
+    defaults:
+      run:
+        working-directory: terraform/environments/${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init Without Backend
+        run: terraform init -backend=false -input=false
+
+      - name: Terraform Validate
+        run: terraform validate

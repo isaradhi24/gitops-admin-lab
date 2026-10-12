@@ -1,0 +1,13 @@
+name: Terraform Dev Workflow
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+    terraform-dev:
+        name: Validate DEV Terraform
+        uses: ./.github/workflows/reusable-terraform.yml
