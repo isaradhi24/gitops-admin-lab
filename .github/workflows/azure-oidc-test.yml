@@ -1,4 +1,4 @@
-name: Azure OIDC Authenticaion Test
+name: Azure OIDC Authentication Test
 
 on:
   workflow_dispatch:
