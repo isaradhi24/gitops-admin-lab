@@ -56,8 +56,16 @@ jobs:
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
-      - name: Terraform Init Without Backend
-        run: terraform init -backend=false -input=false
+      - name: Terraform Init With Azure Remote Backend
+        run: |
+          terraform init \
+            -input=false \
+            -backend-config="resource_group_name=rg-terraform-state" \
+            -backend-config="storage_account_name=stazclouddevopstfstate" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=gitops-admin/${{ inputs.environment }}/terraform.tfstate" \
+            -backend-config="use_azuread_auth=true" \
+            -backend-config="use_oidc=true"
 
       - name: Terraform Validate
         run: terraform validate
