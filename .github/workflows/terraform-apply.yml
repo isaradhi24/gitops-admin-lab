@@ -1,0 +1,30 @@
+
+name: Terraform Apply Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select deployment environment"
+        required: true
+        type: choice
+        options:
+          - dev
+
+      confirmation:
+        description: "Type APPLY to confirm resource creation"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform-apply:
+    name: Apply DEV Terraform
+    if: ${{ inputs.confirmation == 'APPLY' }}
+    uses: ./.github/workflows/reusable-terraform.yml
+    with:
+      environment: ${{ inputs.environment }}
+      terraform_action: apply
