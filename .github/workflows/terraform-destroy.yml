@@ -1,0 +1,30 @@
+
+name: Terraform Destroy Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment to destroy"
+        required: true
+        type: choice
+        options:
+          - dev
+
+      confirmation:
+        description: "Type DESTROY to confirm resource deletion"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform-destroy:
+    name: Destroy DEV Terraform
+    if: ${{ inputs.environment == 'dev' && inputs.confirmation == 'DESTROY' }}
+    uses: ./.github/workflows/reusable-terraform.yml
+    with:
+      environment: ${{ inputs.environment }}
+      terraform_action: destroy
