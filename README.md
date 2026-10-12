@@ -108,6 +108,10 @@ Env## Daily Lab Startup and Verification
 - **Kubernetes cluster:** `kind-gitops-admin`
 - **Kubernetes version:** v1.35.1
 
+## Daily Lab Startup
+
+Follow [DAILY-STARTUP.md](DAILY-STARTUP.md) to start the lab, verify Kubernetes and Argo CD, and connect from MacBook Pro.
+
 ### 1. Start and verify the Kubernetes cluster on Windows
 
 Start Docker Desktop on Windows.
