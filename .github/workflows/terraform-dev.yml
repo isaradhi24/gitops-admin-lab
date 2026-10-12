@@ -11,3 +11,7 @@ jobs:
     terraform-dev:
         name: Validate DEV Terraform
         uses: ./.github/workflows/reusable-terraform.yml
+        with:
+            environment: dev
+            terraform_action: validate
+
