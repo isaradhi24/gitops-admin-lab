@@ -72,3 +72,4 @@ jobs:
 
       - name: Terraform Plan
         if: ${{ inputs.terraform_action == 'plan' }}
+        run: terraform plan -input=false -no-color
