@@ -27,6 +27,12 @@ jobs:
       TF_VAR_acr_name: gitopsadminacr12345
       TF_VAR_environment: ${{ inputs.environment }}
 
+      # Azure OIDC authentication for Terraform
+      ARM_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      ARM_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      ARM_USE_OIDC: "true"
+
     # Reuse our existing, tested OIDC environment for now.
     environment: infrastructure
 
@@ -39,6 +45,13 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+
+      - name: Azure Login using OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
