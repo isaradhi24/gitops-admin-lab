@@ -69,3 +69,6 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+
+      - name: Terraform Plan
+        if: ${{ inputs.terraform_action == 'plan' }}

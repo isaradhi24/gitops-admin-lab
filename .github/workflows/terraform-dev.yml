@@ -13,5 +13,4 @@ jobs:
         uses: ./.github/workflows/reusable-terraform.yml
         with:
             environment: dev
-            terraform_action: validate
-
+            terraform_action: plan
