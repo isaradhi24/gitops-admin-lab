@@ -21,7 +21,7 @@ jobs:
       name: validate Terraform
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/chechkout@v4
+        - uses: actions/checkout@v4
         - name: Terraform Format Check
           run: terraform fmt -check -recursive
         - name: Terraform Validate
@@ -33,7 +33,7 @@ jobs:
     name: Security Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/chceckout@v4
+      - uses: actions/checkout@v4
       - name: Run Checkov IaC Scan
         uses: bridgecrewio/checkov-action@v1
         with:
