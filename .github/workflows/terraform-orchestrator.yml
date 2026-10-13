@@ -1,54 +1,73 @@
+
 name: Terraform Multi-Job Orchestrator
 
 on:
   workflow_dispatch:
-        inputs:
-          environment:
-            description: "Target environment"
-            required: true
-            type: choice
-            options:
-               - dev
-               - qa
-               - uat
-               - prod
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - uat
+          - prod
 
 permissions:
-        contents: read
+  contents: read
 
 jobs:
   validate:
-      name: validate Terraform
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Terraform Format Check
-          run: terraform fmt -check -recursive
-        - name: Terraform Validate
-          working-directory: terraform/environments/${{ inputs.environment }}
-          run: |
-            terraform init -backend=false -input=false
-            terraform validate
+    name: Validate Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.5"
+
+      - name: Verify Terraform Installation
+        run: |
+          which terraform
+          terraform version
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: terraform/environments/${{ inputs.environment }}
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+
   security:
     name: Security Check
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Run Checkov IaC Scan
-        uses: bridgecrewio/checkov-action@v1
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: terraform
           framework: terraform
           soft_fail: true
 
-  Summary:
-      name: Validation Summary
-      runs-on: ubuntu-latestt
-      needs: [validate, security]
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate, security]
 
-      steps:
-        - name: Print Result
-          run: |
-            echo "Terraform validation paused"
-            echo "Security scan completed"
-            echo "Environment: ${{ inputs.environment }}  "
+    steps:
+      - name: Print Result
+        run: |
+          echo "Terraform validation passed"
+          echo "Security scan completed"
+          echo "Environment: ${{ inputs.environment }}"
