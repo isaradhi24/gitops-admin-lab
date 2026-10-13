@@ -1,0 +1,54 @@
+name: Terraform Multi-Job Orchestrator
+
+on:
+  workflow_dispatch:
+        inputs:
+          environment:
+            description: "Target environment"
+            required: true
+            type: choice
+            options:
+               - dev
+               - qa
+               - uat
+               - prod
+
+permissions:
+        contents: read
+
+jobs:
+  validate:
+      name: validate Terraform
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/chechkout@v4
+        - name: Terraform Format Check
+          run: terraform fmt -check -recursive
+        - name: Terraform Validate
+          working-directory: terraform/environments/${{ inputs.environment }}
+          run: |
+            terraform init -backend=false -input=false
+            terraform validate
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/chceckout@v4
+      - name: Run Checkov IaC Scan
+        uses: bridgecrewio/checkov-action@v1
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: true
+
+  Summary:
+      name: Validation Summary
+      runs-on: ubuntu-latestt
+      needs: [validate, security]
+
+      steps:
+        - name: Print Result
+          run: |
+            echo "Terraform validation paused"
+            echo "Security scan completed"
+            echo "Environment: ${{ inputs.environment }}  "
